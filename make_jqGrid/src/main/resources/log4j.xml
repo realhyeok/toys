@@ -31,6 +31,27 @@
 	<logger name="org.springframework.web">
 		<level value="info" />
 	</logger>
+	
+	 <!-- sql 관련 : 시작 -->
+      <logger name="java.sql" additivity="false">
+      	 <level value="debug"/>
+         <appender-ref ref="console" />
+      </logger>
+
+      <logger name="jdbc.sqltiming" additivity="false">
+      	 <level value="debug"/>
+         <appender-ref ref="console" />
+      </logger>
+      <!-- sql 관련 : 끝 -->
+      
+      <!-- 프로젝트 패키지 : 시작 -->
+      <logger name="com.makeboard" additivity="false">
+      	<level value="debug"/>
+        <appender-ref ref="console" />
+      </logger>
+      <!-- 프로젝트 패키지 : 끝 -->
+      
+	
 
 	<!-- Root Logger -->
 	<root>

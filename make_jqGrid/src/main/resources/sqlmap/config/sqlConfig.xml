@@ -9,5 +9,6 @@
 		<typeAlias type="java.lang.String" alias="str"/>
 		<typeAlias type="java.lang.Integer" alias="int"/>
 		<typeAlias type="com.makeboard.user.vo.UserVO" alias="User"/>
+		<typeAlias type="com.makeboard.board.vo.BoardVO" alias="Board"/>
 	</typeAliases>
 </configuration>

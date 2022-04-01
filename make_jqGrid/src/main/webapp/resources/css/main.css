@@ -14,9 +14,9 @@ li > a:hover{
   color: whitesmoke;
   background-color: rgb(117, 117, 117);
 }
-body{
+/* body{
   border: 1px solid gray;
-}
+} */
 header{
   display: flex;
   justify-content: space-between;
@@ -30,20 +30,19 @@ header a {
 main{
   display: flex;
   flex-flow: row wrap;
-  height: 100vh;
+  height: 100%;
 }
 aside{
   flex: 0.5 1 auto;
-}
-section{
-  border: 1px solid gray;
-  flex: 2 1 auto;
 }
 
 section{
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 2 1 auto;
+  border: 1px solid gray;
+  height : 600px;
 }
 .login{
   text-align: center;
@@ -102,6 +101,30 @@ section{
 
 .welcome_message {
   position: absolute;
-  top: 32%;
+  top: 20%;
   left: 83%;
+}
+section .board .tableTest{
+  display: inline-block;
+}
+
+.board{
+	width : 1019px;
+	overflow : auto;
+}
+.boardBtnDiv{
+	float : right;
+	margin-bottom : 10px;
+}
+
+.row{
+  display: flex;
+}
+
+.board_detail tr td:nth-child(-2n+5){
+  text-align: center;
+}
+.buttonList{
+  float: right;
+  margin-top: 10px;
 }

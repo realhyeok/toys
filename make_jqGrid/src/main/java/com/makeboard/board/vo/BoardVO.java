@@ -1,6 +1,9 @@
 package com.makeboard.board.vo;
 
 import java.util.Date;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public class BoardVO {
 	private String bdNo;
@@ -9,8 +12,9 @@ public class BoardVO {
 	private String bdWriter;
 	private Date bdRegdate;
 	private Date bdUpdatedate;
-	private String bdAttach;
-	private String bdPw;
+	private String bdAttach= "";
+	private String bdPw = "";
+	private MultipartFile multiPartFile;
 	
 	public String getBdNo() {
 		return bdNo;
@@ -59,6 +63,13 @@ public class BoardVO {
 	}
 	public void setBdPw(String bdPw) {
 		this.bdPw = bdPw;
+	
+	}
+	public MultipartFile getMultiPartFile() {
+		return multiPartFile;
+	}
+	public void setMultiPartFile(MultipartFile multiPartFile) {
+		this.multiPartFile = multiPartFile;
 	}
 	
 }

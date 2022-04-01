@@ -2,5 +2,5 @@
     pageEncoding="UTF-8"%>
 <header>
     <h1>김진혁의 게시판 HomePage</h1>
-    <a href="#">HOME</a>
+    <a href="/">HOME</a>
 </header>
