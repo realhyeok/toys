@@ -10,5 +10,6 @@
 		<typeAlias type="java.lang.Integer" alias="int"/>
 		<typeAlias type="com.makeboard.user.vo.UserVO" alias="User"/>
 		<typeAlias type="com.makeboard.board.vo.BoardVO" alias="Board"/>
+		<typeAlias type="com.makeboard.board.vo.BoardFileVO" alias="BoardFileVO"/>
 	</typeAliases>
 </configuration>

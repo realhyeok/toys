@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.makeboard.board.vo.BoardFileVO;
 import com.makeboard.board.vo.BoardVO;
 import com.makeboard.user.web.UserController;
 
@@ -41,6 +42,11 @@ public class BoardDaoImpl implements BoardDao{
 	@Override
 	public void deleteBoardBybdNo(String bdNo) throws SQLException {
 		sqlSession.delete("Board-Mapper.deleteBoardBybdNo", bdNo);
+	}
+
+	@Override
+	public void insertBoardFileVO(BoardFileVO bfVO) throws SQLException {
+		sqlSession.insert("Board-Mapper.insertBoardFileVO", bfVO);
 	}
 
 }

@@ -35,7 +35,7 @@
               <tr>
                 <th scope="row">첨부파일</th>
                 <td colspan="5">
-                  <input type="file" id="bdAttach" name="multiPartFile"/>
+                  <input type="file" id="bdAttach" name="file"/>
                   <a href="#" name="file-delete">삭제</a>
                 </td>
               </tr>

@@ -42,5 +42,11 @@
 		DELETE FROM intern_test.board
 		WHERE BD_NO=#{bdNo};
 	</delete>
+	
+	<insert id="insertBoardFileVO" parameterType="BoardFileVO">
+		INSERT INTO INTERN_TEST.BOARDFILE
+			(UUID, UPLOADPATH, FILE_NM, FILE_TYPE, BD_NO, WRITER)
+		VALUES(#{uuid}, #{uploadPath}, #{fileNm}, #{fileType}, #{bdNo},#{writer})
+	</insert>
  	
  </mapper>

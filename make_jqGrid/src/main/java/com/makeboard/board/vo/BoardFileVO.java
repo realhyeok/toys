@@ -7,6 +7,7 @@ public class BoardFileVO {
 	private String fileType;
 	private String bdNo;
 	private String writer;
+	
 	public String getUuid() {
 		return uuid;
 	}

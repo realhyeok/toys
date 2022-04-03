@@ -14,7 +14,6 @@ public class BoardVO {
 	private Date bdUpdatedate;
 	private String bdAttach= "";
 	private String bdPw = "";
-	private MultipartFile multiPartFile;
 	
 	public String getBdNo() {
 		return bdNo;
@@ -64,12 +63,6 @@ public class BoardVO {
 	public void setBdPw(String bdPw) {
 		this.bdPw = bdPw;
 	
-	}
-	public MultipartFile getMultiPartFile() {
-		return multiPartFile;
-	}
-	public void setMultiPartFile(MultipartFile multiPartFile) {
-		this.multiPartFile = multiPartFile;
 	}
 	
 }

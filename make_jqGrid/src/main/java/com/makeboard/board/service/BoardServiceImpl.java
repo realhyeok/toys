@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.makeboard.board.dao.BoardDao;
+import com.makeboard.board.vo.BoardFileVO;
 import com.makeboard.board.vo.BoardVO;
 
 @Service
@@ -38,6 +39,11 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public void deleteBoardBybdNo(String bdNo) throws SQLException {
 		boardDao.deleteBoardBybdNo(bdNo);
+	}
+
+	@Override
+	public void insertBoardFileVO(BoardFileVO bfVO) throws SQLException {
+		boardDao.insertBoardFileVO(bfVO);
 	}
 
 }

@@ -1,13 +1,17 @@
 package com.makeboard.board.web;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.makeboard.board.service.BoardService;
+import com.makeboard.board.vo.BoardFileVO;
 import com.makeboard.board.vo.BoardVO;
 
 @Controller
@@ -51,14 +56,32 @@ public class BoardController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/boardInsert.do", method = RequestMethod.POST)
-	public Map<String, String> boardInsert(BoardVO boardVO) throws SQLException{
+	public Map<String, String> boardInsert(BoardVO boardVO, MultipartFile file) throws SQLException, IllegalStateException, IOException{
 		Map<String, String> retMap = new HashMap<>();
+		
+		String filePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
+		
+		UUID uuid = UUID.randomUUID();
+		
+		String fileName = uuid + "_" + file.getOriginalFilename();
+		String fileType =FilenameUtils.getExtension(file.getOriginalFilename()); 
+		File saveFile = new File(filePath, fileName);
+		
+		file.transferTo(saveFile);
+		
+//		save the datas to boardFileVO
+		BoardFileVO bfVO = new BoardFileVO();
+		bfVO.setFileNm(fileName);
+		bfVO.setUploadPath(filePath + "\\" + fileName);
+		bfVO.setUuid(uuid.toString());
+		bfVO.setWriter(boardVO.getBdWriter());
+		bfVO.setBdNo(boardVO.getBdNo());
+		bfVO.setFileType(fileType);
+		
 		boardService.addBoard(boardVO);
 		
-		System.out.println("file check => " + boardVO.getBdAttach());
-		
-		
 		retMap.put("success", "success");
+		
 		return retMap;
 	}
 	
