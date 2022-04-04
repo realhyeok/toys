@@ -2,6 +2,7 @@ package com.makeboard.board.dao;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import com.makeboard.board.vo.BoardFileVO;
 import com.makeboard.board.vo.BoardVO;
@@ -24,5 +25,13 @@ public interface BoardDao {
 	public void deleteBoardBybdNo(String bdNo) throws SQLException;
 	
 	public void insertBoardFileVO(BoardFileVO bfVO) throws SQLException;
+	
+	public void updateBoardFileBybdNo(BoardFileVO bfVO) throws SQLException;
+	
+	public void deleteBoardFileBybdNo(String bdNo) throws SQLException;
+	
+	public int selectBoardFileBybdNo(String bdNo) throws SQLException;
+	
+	public List<BoardVO> selectSearchBoardList(Map<String, String> searchMap) throws SQLException;
 	
 }

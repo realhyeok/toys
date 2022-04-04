@@ -14,6 +14,7 @@ public class BoardVO {
 	private Date bdUpdatedate;
 	private String bdAttach= "";
 	private String bdPw = "";
+	private MultipartFile file;
 	
 	public String getBdNo() {
 		return bdNo;
@@ -63,6 +64,18 @@ public class BoardVO {
 	public void setBdPw(String bdPw) {
 		this.bdPw = bdPw;
 	
+	}
+	public MultipartFile getFile() {
+		return file;
+	}
+	public void setFile(MultipartFile file) {
+		this.file = file;
+	}
+	@Override
+	public String toString() {
+		return "BoardVO [bdNo=" + bdNo + ", bdTitle=" + bdTitle + ", bdContent=" + bdContent + ", bdWriter=" + bdWriter
+				+ ", bdRegdate=" + bdRegdate + ", bdUpdatedate=" + bdUpdatedate + ", bdAttach=" + bdAttach + ", bdPw="
+				+ bdPw + ", file=" + file + "]";
 	}
 	
 }

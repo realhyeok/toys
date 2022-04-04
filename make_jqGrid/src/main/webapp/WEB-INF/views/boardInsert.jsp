@@ -52,6 +52,7 @@
 
       </div>
       
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
 <script>
     let saveBtn = document.querySelector('.saveBtn');
 
@@ -80,8 +81,9 @@
       $.ajax({
         type: "post",
         url: "/boardInsert.do",
-        enctype: 'multipart/form-data',
-        data: $('#board_insert_form').serialize(),
+        data: new FormData($('#board_insert_form')[0]),
+        processData: false,
+        contentType: false,
         success: function (resp) {
           if(resp.success === "success"){
             alert("게시글이 등록되었습니다.")

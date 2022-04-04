@@ -37,7 +37,7 @@
               <tr>
                 <th scope="row">첨부파일</th>
                 <td colspan="5">
-                  <input type="file" id="bdAttach" name="bdAttach" value="${boardVO.bdAttach}"/>
+                  <input type="file" id="bdAttach" name="file" value="${boardVO.file}"/>
                 </td>
               </tr>
             </tbody>
@@ -52,6 +52,7 @@
         </div>
       </div>
       
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
 <script>
     const saveBtn = document.querySelector('.saveBtn');
     const deleteBtn = document.querySelector('.deleteBtn');
@@ -67,7 +68,9 @@
       $.ajax({
         type: "post",
         url: "/boardUpdate.do",
-        data: $('#board_update_form').serialize(),
+        data: new FormData($('#board_update_form')[0]),
+        processData: false,
+        contentType: false,
         success: function (resp) {
           if(resp.success === "success"){
             alert("게시글이 수정되었습니다.")

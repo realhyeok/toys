@@ -44,9 +44,43 @@
 	</delete>
 	
 	<insert id="insertBoardFileVO" parameterType="BoardFileVO">
-		INSERT INTO INTERN_TEST.BOARDFILE
-			(UUID, UPLOADPATH, FILE_NM, FILE_TYPE, BD_NO, WRITER)
-		VALUES(#{uuid}, #{uploadPath}, #{fileNm}, #{fileType}, #{bdNo},#{writer})
+		INSERT INTO INTERN_TEST.FILE_ATTACH
+			(UUID, UPLOAD_PATH, FILE_NM, FILE_TYPE, BD_NO, WRITER)
+		VALUES(#{uuid}, #{uploadPath}, #{fileNm}, #{fileType}, NEXTVAL('BOARD_SEQ'),#{writer})
 	</insert>
+	
+	<select id="selectBoardFileBybdNo" parameterType="str" resultType="Integer">
+		SELECT *
+		FROM INTERN_TEST.FILE_ATTACH
+		WHERE BD_NO = #{bdNo}
+	</select>
+	
+	<update id="updateBoardFileBybdNo" parameterType="BoardFileVO">
+		UPDATE INTERN_TEST.FILE_ATTACH
+		SET  uuid=#{uuid}
+			,upload_path=#{uploadPath}
+			,file_nm=#{fileNm}
+			,file_type =#{fileType}
+		WHERE BD_NO=#{bdNo}
+	</update>
  	
+ 	<delete id="deleteBoardFileBybdNo" parameterType="str" >
+ 		DELETE FROM INTERN_TEST.FILE_ATTACH
+		WHERE BD_NO=#{bdNo};
+ 	</delete>
+ 	
+ 	<select id="selectSearchBoardList" parameterType="hashMap" resultType="Board">
+ 		SELECT *
+ 		FROM INTERN_TEST.BOARD
+ 		WHERE	1 = 1
+ 		<if test="searchTitle != null and searchTitle != ''">
+			AND BD_TITLE LIKE #{searchTitle} || '%'
+		</if>
+		<if test="searchWriter != null and searchWriter != ''">
+			AND BD_WRITER LIKE #{searchWriter} || '%'
+		</if>
+		<if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+			AND BD_REGDATE  BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
+		</if>
+ 	</select>
  </mapper>

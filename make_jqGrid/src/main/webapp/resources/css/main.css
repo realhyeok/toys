@@ -128,3 +128,18 @@ section .board .tableTest{
   float: right;
   margin-top: 10px;
 }
+.search{
+  width: 1019px;
+  height: 100px;
+  border: 1px solid lightgrey;
+  margin: 15px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.search label{
+  margin-left: 10px;
+}
+.search input[type="button"]{
+  margin-left: 10px;
+}

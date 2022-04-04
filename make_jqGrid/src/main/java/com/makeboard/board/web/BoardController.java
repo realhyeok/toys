@@ -12,13 +12,14 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.makeboard.board.service.BoardService;
@@ -28,23 +29,19 @@ import com.makeboard.board.vo.BoardVO;
 @Controller
 public class BoardController {
 
+	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
+	
 	@Autowired
 	private BoardService boardService;
-	
 	
 	@ResponseBody
 	@RequestMapping(value= "/getBoardDatas", method = RequestMethod.POST)
 	public List<BoardVO> getBoardDatas() throws SQLException{
 		List<BoardVO> boardList = new ArrayList<>();
-//		Map<String, List<BoardVO>> retMap = new HashMap<>();
-//		JSONObject jo = new JSONObject();
-//		JSONArray ja = new JSONArray();
 		
 		boardList = boardService.getAllBoardList();
 		
-//		for (BoardVO b : boardList) {
-//			System.out.println(b.getBdRegdate());
-//		}
+		
 		return boardList;
 	}
 	@RequestMapping(value = "/board", method = RequestMethod.GET)
@@ -56,28 +53,37 @@ public class BoardController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/boardInsert.do", method = RequestMethod.POST)
-	public Map<String, String> boardInsert(BoardVO boardVO, MultipartFile file) throws SQLException, IllegalStateException, IOException{
+	public Map<String, String> boardInsert(BoardVO boardVO) throws SQLException, IllegalStateException, IOException{
 		Map<String, String> retMap = new HashMap<>();
-		
-		String filePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
-		
-		UUID uuid = UUID.randomUUID();
-		
-		String fileName = uuid + "_" + file.getOriginalFilename();
-		String fileType =FilenameUtils.getExtension(file.getOriginalFilename()); 
-		File saveFile = new File(filePath, fileName);
-		
-		file.transferTo(saveFile);
-		
-//		save the datas to boardFileVO
-		BoardFileVO bfVO = new BoardFileVO();
-		bfVO.setFileNm(fileName);
-		bfVO.setUploadPath(filePath + "\\" + fileName);
-		bfVO.setUuid(uuid.toString());
-		bfVO.setWriter(boardVO.getBdWriter());
-		bfVO.setBdNo(boardVO.getBdNo());
-		bfVO.setFileType(fileType);
-		
+
+//		if file exist
+		if(!boardVO.getFile().isEmpty()){
+			String filePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
+			
+			UUID uuid = UUID.randomUUID();
+			
+			String fileName = File.separator + uuid + "_" + boardVO.getFile().getOriginalFilename();
+			String fileType =FilenameUtils.getExtension(boardVO.getFile().getOriginalFilename()); 
+			File saveFile = new File(filePath, fileName);
+			
+			if(!saveFile.exists()){
+				saveFile.mkdirs();
+			}
+			
+			boardVO.getFile().transferTo(saveFile);
+			
+//			save the datas to boardFileVO
+			BoardFileVO bfVO = new BoardFileVO();
+			bfVO.setFileNm(fileName);
+			bfVO.setUploadPath(filePath + "\\" + fileName);
+			bfVO.setUuid(uuid.toString());
+			bfVO.setWriter(boardVO.getBdWriter());
+			bfVO.setBdNo(boardVO.getBdNo());
+			bfVO.setFileType(fileType);
+			boardVO.setBdAttach(filePath + "\\" + fileName);
+			
+			boardService.insertBoardFileVO(bfVO);
+		}
 		boardService.addBoard(boardVO);
 		
 		retMap.put("success", "success");
@@ -93,12 +99,17 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/boardDetail.do", method = RequestMethod.GET)
-	public ModelAndView boardDetail(ModelAndView mv, HttpServletRequest req) throws SQLException{
+	public ModelAndView boardDetail(ModelAndView mv, HttpServletRequest req) throws SQLException, IllegalStateException, IOException{
 		BoardVO boardVO = new BoardVO();
 		
 		String bdNo = req.getParameter("bdNo");
 		
 		boardVO = boardService.getBoardBybdNo(bdNo);
+		logger.debug("boardVO.getBdAttach() = > " + boardVO.getBdAttach());
+//		File file = new File(boardVO.getBdAttach());
+//		MultipartFile multiFile = null;
+//		multiFile.transferTo(file);
+//		boardVO.setFile(multiFile);
 		
 		mv.addObject("boardVO", boardVO);
 		mv.setViewName("/boardDetail");
@@ -127,9 +138,42 @@ public class BoardController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/boardUpdate.do", method = RequestMethod.POST)
-	public Map<String, String> boardUpdate(BoardVO boardVO) throws SQLException{
-		
+	public Map<String, String> boardUpdate(BoardVO boardVO) throws SQLException, IOException{
 		Map<String, String> retMap = new HashMap<>();
+		
+//		if file exist
+		if(!boardVO.getFile().isEmpty()){
+			String filePath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
+			
+			UUID uuid = UUID.randomUUID();
+			
+			String fileName = File.separator + uuid + "_" + boardVO.getFile().getOriginalFilename();
+			String fileType =FilenameUtils.getExtension(boardVO.getFile().getOriginalFilename()); 
+			File saveFile = new File(filePath, fileName);
+			
+			if(!saveFile.exists()){
+				saveFile.mkdirs();
+			}
+			
+			boardVO.getFile().transferTo(saveFile);
+			
+//			save the datas to boardFileVO
+			BoardFileVO bfVO = new BoardFileVO();
+			bfVO.setFileNm(fileName);
+			bfVO.setUploadPath(filePath + "\\" + fileName);
+			bfVO.setUuid(uuid.toString());
+			bfVO.setWriter(boardVO.getBdWriter());
+			bfVO.setBdNo(boardVO.getBdNo());
+			bfVO.setFileType(fileType);
+			boardVO.setBdAttach(filePath + "\\" + fileName);
+			
+			if(boardService.selectBoardFileBybdNo(boardVO.getBdNo()) > 0){
+				boardService.updateBoardFileBybdNo(bfVO);
+			} else {
+				boardService.insertBoardFileVO(bfVO);
+			}
+		}
+		
 		boardService.updateBoardBybdNo(boardVO);
 		
 		retMap.put("success", "success");
@@ -142,9 +186,26 @@ public class BoardController {
 		
 		Map<String, String> retMap = new HashMap<>();
 		boardService.deleteBoardBybdNo(bdNo);
+		boardService.deleteBoardFileBybdNo(bdNo);
 		
 		retMap.put("success", "success");
 		return retMap;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/search.do", method = RequestMethod.POST)
+	public List<BoardVO> search(@RequestParam("searchTitle") String searchTitle, @RequestParam("searchWriter") String searchWriter, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) throws SQLException{
+		List<BoardVO> boardList = new ArrayList<>();
+		Map<String, String> searchMap = new HashMap<>();
+
+		searchMap.put("searchTitle", searchTitle);
+		searchMap.put("searchWriter", searchWriter);
+		searchMap.put("startDate", startDate);
+		searchMap.put("endDate", endDate);
+		
+		boardList = boardService.selectSearchBoardList(searchMap);
+		
+		return boardList;
 	}
 	
 }

@@ -11,40 +11,29 @@ $(document).ready(function () {
   test();
 });
 
+
 function test(){	
-  // $.ajax({
-  //   type: "post",
-  //   url: "/getBoardDatas",
-  //   dataType: "json",
-  //   success: function (resp) {
-  //     console.log(resp);
-  //     resp.forEach((e) => {
-  //       console.log(e);
-  //       console.log(e.bdTitle);
-  //     });
-  //   }
-  // });
-  
+  $("#mainGrid").trigger("reloadGrid"); 
 	$("#mainGrid").jqGrid({
     url : '/getBoardDatas',
 		datatype : "json",
 		mtype: "post",
 		colNames: searchResultColNames,
 		colModel: searchResultColModel,
-		rowNum: 10,
 		pager: "#pager",
     emptyrecords : "데이터가 없습니다.",
-		caption: `총 : 미구현`,
+		caption: `게시글 목록`,
+		rowNum  : 10,
 		multiselect : true,
 		multiboxonly : true,
+		viewrecords : true,
 		sortname : 'bdNo',
-		sortorder : 'desc',
-		gridview : true,
+		sortorder : "desc",
+		sortable:true,
 		width: 1019,
-		height: 261
+		height: 261,
 	});
 }
-
 
 $('.detailBtn').click(function (e) { 
   e.preventDefault();
@@ -53,3 +42,22 @@ $('.detailBtn').click(function (e) {
   if(rowInfo.bdNo == null) return false;
   location.href = "/boardDetail.do?bdNo=" + rowInfo.bdNo;
 });
+
+var timeoutHnd;
+var flAuto = true;
+
+function doSearch(ev){
+	if(!flAuto)
+		return;
+	if(timeoutHnd)
+		clearTimeout(timeoutHnd)
+	timeoutHnd = setTimeout(gridReload,500)
+}
+
+function gridReload(){
+	let searchTitle = $("#search_title").val();
+	let searchWriter = $("#search_writer").val();
+  let startDate = $('#start_date').val();
+  let endDate = $('#end_date').val();
+	$("#mainGrid").jqGrid('setGridParam',{url:"/search.do?searchTitle="+searchTitle+"&searchWriter="+searchWriter + "&startDate=" + startDate + "&endDate=" + endDate, page:1}).trigger("reloadGrid");
+}
