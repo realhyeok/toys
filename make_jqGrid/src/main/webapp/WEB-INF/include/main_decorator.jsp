@@ -25,7 +25,7 @@
     </section>
     
     <c:if test="${not empty userVO}">
-      <div class="welcome_message" style="display: none;">
+      <div class="welcome_message">
         ${userVO.nickname}님이 로그인 했습니다.
       </div>
     </c:if>

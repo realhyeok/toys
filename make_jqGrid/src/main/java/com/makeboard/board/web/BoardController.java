@@ -1,7 +1,12 @@
 package com.makeboard.board.web;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -106,12 +112,9 @@ public class BoardController {
 		
 		boardVO = boardService.getBoardBybdNo(bdNo);
 		logger.debug("boardVO.getBdAttach() = > " + boardVO.getBdAttach());
-//		File file = new File(boardVO.getBdAttach());
-//		MultipartFile multiFile = null;
-//		multiFile.transferTo(file);
-//		boardVO.setFile(multiFile);
 		
 		mv.addObject("boardVO", boardVO);
+		mv.addObject("fileName", boardVO.getBdAttach().substring(boardVO.getBdAttach().lastIndexOf("_") + 1));
 		mv.setViewName("/boardDetail");
 		
 		return mv;
@@ -206,6 +209,62 @@ public class BoardController {
 		boardList = boardService.selectSearchBoardList(searchMap);
 		
 		return boardList;
+	}
+	
+	@RequestMapping(value = "/download")
+	public void fileDownload(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		
+		try{
+			BoardVO boardVO = new BoardVO();
+
+			String bdNo = req.getParameter("bdNo");
+			
+			boardVO = boardService.getBoardBybdNo(bdNo);
+//			logger.debug("boardVO.getBdAttach() = > " + boardVO.getBdAttach());
+			String filePath = boardVO.getBdAttach();
+			File file = new File(filePath);
+			String fileName = boardVO.getBdAttach().substring(boardVO.getBdAttach().lastIndexOf("_") + 1);
+//			logger.debug("fileName => " + fileName);
+			int fSize = (int) file.length();
+			
+			if(fSize > 0){
+//				파일명을 URLEncoder 하여 attachment, Content-Disposition Header로 설정
+				String encodedFileName = "attachment; filename*=" + "UTF-8" + "''" + URLEncoder.encode(fileName, "UTF-8");
+				
+				// ContentType 설정
+				resp.setContentType("application/octet-stream; charset=utf-8");
+				
+				// header 설정
+				resp.setHeader("Content-Disposition", encodedFileName);
+				
+				// ContentLength 설정
+				resp.setContentLengthLong(fSize);
+				
+				BufferedInputStream in = null;
+				BufferedOutputStream out = null;
+				
+				in = new BufferedInputStream(new FileInputStream(file));
+				out = new BufferedOutputStream(resp.getOutputStream());
+				
+				try {
+					byte[] buffer = new byte[4096];
+					int bytesRead = 0;
+					
+					while((bytesRead = in.read(buffer)) != -1){
+						out.write(buffer, 0, bytesRead);
+					}
+					out.flush();
+				} finally {
+					in.close();
+					out.close();
+				}
+			} else {
+				throw new FileNotFoundException("파일이 없습니다.");
+			}
+		} catch(Exception e){
+			logger.info(e.getMessage());
+		}
+		
 	}
 	
 }

@@ -13,7 +13,6 @@ $(document).ready(function () {
 
 
 function test(){	
-  $("#mainGrid").trigger("reloadGrid"); 
 	$("#mainGrid").jqGrid({
     url : '/getBoardDatas',
 		datatype : "json",
@@ -21,15 +20,16 @@ function test(){
 		colNames: searchResultColNames,
 		colModel: searchResultColModel,
 		pager: "#pager",
-    emptyrecords : "데이터가 없습니다.",
-		caption: `게시글 목록`,
+		emptyrecords : "데이터가 없습니다.",
+		caption: "게시글 목록",
 		rowNum  : 10,
 		multiselect : true,
 		multiboxonly : true,
 		viewrecords : true,
-		sortname : 'bdNo',
-		sortorder : "desc",
-		sortable:true,
+		loadonce:true,
+//		sortname : 'bdNo',
+//		sortorder : "desc",
+//		sortable:true,
 		width: 1019,
 		height: 261,
 	});
@@ -57,7 +57,9 @@ function doSearch(ev){
 function gridReload(){
 	let searchTitle = $("#search_title").val();
 	let searchWriter = $("#search_writer").val();
-  let startDate = $('#start_date').val();
-  let endDate = $('#end_date').val();
+	let startDate = $('#start_date').val();
+	let endDate = $('#end_date').val();
+
+	// $("#mainGrid").jqGrid('setGridParam',{url:"/search.do?searchTitle="+searchTitle+"&searchWriter="+searchWriter + "&startDate=" + startDate + "&endDate=" + endDate, page:1});
 	$("#mainGrid").jqGrid('setGridParam',{url:"/search.do?searchTitle="+searchTitle+"&searchWriter="+searchWriter + "&startDate=" + startDate + "&endDate=" + endDate, page:1}).trigger("reloadGrid");
 }

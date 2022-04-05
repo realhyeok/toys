@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <!-- board detail -->
       <div class="container">
-        <h2>게시글 등록 화면</h2>
+        <h2>게시글 수정 화면</h2>
         <form id="board_update_form">
           <table class="board_detail" style="width: 1019px;" border="1">
             <colgroup>
