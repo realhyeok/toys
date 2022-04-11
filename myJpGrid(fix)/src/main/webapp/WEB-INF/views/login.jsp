@@ -5,13 +5,13 @@
 
         <div class="form_group validation">
             <label for="userId">아이디 : </label>
-            <input type="text" name="userId" id="userId"> <br/>
+            <input type="text" name="userId" id="userId" autocomplete="off"> <br/>
             <small>error message</small>
         </div>
 
         <div class="form_group validation">
             <label for="userPw">비밀번호 : </label>
-            <input type="text" name="userPw" id="userPw"> <br/>
+            <input type="password" name="userPw" id="userPw"> <br/>
             <small>error message</small>
         </div>
 

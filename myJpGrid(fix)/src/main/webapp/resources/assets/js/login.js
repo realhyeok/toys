@@ -26,20 +26,19 @@ document.querySelector('#loginBtn').addEventListener('click',() => {
 					timer: 1500,
 				});
 				} else {
-					// add_welcome_message(userId.value);
 					Swal.fire({
-						title : '환영합니다!',
-						icon : 'success',
-						showConfirmButton : false,
-						timer : 1500
-					}).setTimeout(() => {
-						location.href = '/'
+						title: "환영합니다!",
+						icon: "success",
+						showConfirmButton: false,
+						timer: 1000,
+					});
+					setTimeout(() => {
+						location.href = "/";
 					}, 1000);
 				}
-		}
+			}
+		});
 	});
-
-});
 
 
 function checkInputs() {

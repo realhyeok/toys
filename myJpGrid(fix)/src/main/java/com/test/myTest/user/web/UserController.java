@@ -51,5 +51,12 @@ public class UserController {
 		
 		return retMap; 
 	}
+	
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout (HttpSession session){
+		String url = "redirect:/";
+		session.removeAttribute("userVO");
+		return url;
+	}
 
 }
