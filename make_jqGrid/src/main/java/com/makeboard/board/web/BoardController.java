@@ -259,6 +259,7 @@ public class BoardController {
 					out.close();
 				}
 			} else {
+				resp.getWriter().print("<script>location.href='/board'</script>");
 				throw new FileNotFoundException("파일이 없습니다.");
 			}
 		} catch(Exception e){
